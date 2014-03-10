@@ -3,6 +3,8 @@ package opt.unimodal
 import math.abs
 
 /**
+ * @deprecated
+ *
  * In mathematical optimization, the method of Lagrange multipliers (named after Joseph Louis Lagrange) is a strategy
  * for finding the local maxima and minima of a function subject to equality constraints.
  * <p>For instance (see Figure 1), consider the optimization problem</p>
