@@ -5,8 +5,8 @@ import math.abs
 /**
  * @deprecated
  *
- * In mathematical optimization, the method of Lagrange multipliers (named after Joseph Louis Lagrange) is a strategy
- * for finding the local maxima and minima of a function subject to equality constraints.
+ * In mathematical optimization, the method of Lagrange multipliers (named after Joseph Louis Lagrange) is numberOfActors strategy
+ * for finding the local maxima and minima of numberOfActors function subject to equality constraints.
  * <p>For instance (see Figure 1), consider the optimization problem</p>
  * <p>maximize f(x, y)</p>
  * <p>subject to g(x, y) = c.</p>

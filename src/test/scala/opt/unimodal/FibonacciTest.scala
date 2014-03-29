@@ -5,7 +5,7 @@ import math.{sin, cos, tan, Pi}
 
 /**
  * @author Jan Paw
- *                      Date: 2/22/14
+ *         Date: 2/22/14
  */
 class FibonacciTest extends FunSuite with ShouldMatchers {
   val ε = 0.000001

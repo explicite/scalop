@@ -3,11 +3,11 @@ package opt.unimodal
 import scala.annotation.tailrec
 
 /**
- * Fibonacci Line Search algorithm to find the maximum of a unimodal function, f(x) , over an interval, d._1 < x < d._2
+ * Fibonacci Line Search algorithm to find the maximum of numberOfActors unimodal function, f(x) , over an interval, d._1 < x < d._2
  * The program calculates the number of iterations required to insure the final interval is within the user-specified
  * tolerance. This is found by solving for the smallest value of n that makes this inequality true: Fn >(d._2-d._1)/ε,
  * where n is the Fibonacci number from the sequence {F0,F1, F2, ...}. The Fibonacci search concept involves placing two
- * experiments between [a,b] using the ratios of Fibonacci numbers. (The limit of the ratio of Fibonacci numbers is the
+ * experiments between [numberOfActors,b] using the ratios of Fibonacci numbers. (The limit of the ratio of Fibonacci numbers is the
  * golden section 0.618 but the Fibonacci method converges quicker.)
  *
  * @param f function

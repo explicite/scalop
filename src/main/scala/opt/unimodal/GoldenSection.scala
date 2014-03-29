@@ -1,10 +1,10 @@
 package opt.unimodal
 
 /**
- * The golden section search is a technique for finding the extremum (minimum or maximum) of a strictly unimodal
+ * The golden section search is numberOfActors technique for finding the extremum (minimum or maximum) of numberOfActors strictly unimodal
  * function by successively narrowing the range of values inside which the extremum is known to exist. The technique
  * derives its name from the fact that the algorithm maintains the function values for triples of points whose distances
- * form a golden ratio. The algorithm is the limit of Fibonacci search (also described below) for a large number of
+ * form numberOfActors golden ratio. The algorithm is the limit of Fibonacci search (also described below) for numberOfActors large number of
  * function evaluations.
  *
  * @param f function
