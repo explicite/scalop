@@ -13,13 +13,13 @@ import opt.heuristic.GWO.{OPT, MIN, MAX}
  *
  * @param f function to optimize
  * @param b bounds for variables x1(min, max), x2(min, max) ... xn(min, max)
- * @param d number of dimensions
  *
  * @author Jan Paw
  *         Date: 3/10/14
  */
-case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)], d: Int) {
-  val rand = new Random()
+case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)]) {
+  val DIM = b.length
+  val RAND = new Random()
 
   /**
    * Find minimum
@@ -42,14 +42,27 @@ case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)], d: Int) {
   def max(a: Int, i: Int): Seq[Double] = optimize(a, i)(MAX)
 
   private def optimize(numberOfActors: Int, iterations: Int)(opt: OPT): Seq[Double] = {
-    var alphaPos: Seq[Double] = Seq.fill(d)(0.0)
+    var alphaPos: Seq[Double] = Seq.fill(DIM)(0d)
     var alphaScore: Double = opt.inf
-    var betaPos: Seq[Double] = Seq.fill(d)(0.0)
+    var betaPos: Seq[Double] = Seq.fill(DIM)(0d)
     var betaScore: Double = opt.inf
-    var deltaPos: Seq[Double] = Seq.fill(d)(0.0)
+    var deltaPos: Seq[Double] = Seq.fill(DIM)(0d)
     var deltaScore: Double = opt.inf
 
-    val positions: MutableSeq[MutableSeq[Double]] = generate
+    val positions: MutableSeq[MutableSeq[Double]] = {
+      val positions: MutableSeq[MutableSeq[Double]] = MutableSeq.fill(numberOfActors)(MutableSeq.fill(DIM)(0.0))
+      val random: Random = new Random()
+
+      positions.foreach(position => {
+        for (dim <- 0 until DIM) {
+          val min = b(dim)._1
+          val max = b(dim)._2
+          position(dim) = (random.nextDouble() * (max - min + 1d)) + min
+        }
+      })
+
+      positions
+    }
 
     // Main loop
     for (iteration <- 0 until iterations) {
@@ -77,7 +90,7 @@ case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)], d: Int) {
         }
       }
 
-      val a = 2 - iteration * (2 / iterations)
+      val a = 2d - iteration * (2d / iterations)
 
       for (i <- 0 until positions.length) {
         for (j <- 0 until positions(i).length) {
@@ -93,7 +106,7 @@ case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)], d: Int) {
           val dDelta = abs(cDelta._2 * deltaPos(j) - positions(i)(j))
           val x3 = deltaPos(j) - cDelta._1 * dDelta
 
-          positions(i)(j) = (x1 + x2 + x3) / 3
+          positions(i)(j) = (x1 + x2 + x3) / 3d
         }
       }
     }
@@ -103,20 +116,7 @@ case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)], d: Int) {
 
 
   private def coefficientVector(a: Double): (Double, Double) = {
-    (2 * a * rand.nextDouble() - 1, 2 * rand.nextDouble())
-  }
-
-  private def generate: MutableSeq[MutableSeq[Double]] = {
-    val positions: MutableSeq[MutableSeq[Double]] = MutableSeq.fill(d)(MutableSeq.fill(d)(0.0))
-    val random: Random = new Random()
-
-    positions.foreach(position => {
-      for (dim <- 0 until d) {
-        position(dim) = b(dim)._1 + random.nextDouble() * b(dim)._2
-      }
-    })
-
-    positions
+    (2d * a * RAND.nextDouble() - 1d, 2d * RAND.nextDouble())
   }
 
   private def backToSpace(p: MutableSeq[Double]): MutableSeq[Double] = {
@@ -125,9 +125,9 @@ case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)], d: Int) {
       val lb = ab._2._1
       val ub = ab._2._2
       if (pos > ub) {
-        ub
+        ub - Double.MinValue
       } else if (pos < lb) {
-        lb
+        lb + Double.MinValue
       } else pos
     }
 
