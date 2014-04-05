@@ -1,9 +1,9 @@
 package opt.heuristic
 
-import scala.collection.mutable.{Seq => MutableSeq}
 import scala.util.Random
 import scala.math.abs
-import opt.heuristic.GWO.{OPT, MIN, MAX}
+import opt.{Optimum, MIN, MAX}
+import scala.collection.mutable.{Seq => MutableSeq}
 
 /**
  * The GWO (Grey Wolf Optimizer) algorithm mimics the leadership hierarchy and hunting mechanism of gray wolves in
@@ -17,7 +17,7 @@ import opt.heuristic.GWO.{OPT, MIN, MAX}
  * @author Jan Paw
  *         Date: 3/10/14
  */
-case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)]) {
+case class GreyWolfOptimizer(f: (Seq[Double]) => Double, b: Seq[(Double, Double)]) {
   val DIM = b.length
   val RAND = new Random()
 
@@ -41,7 +41,7 @@ case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)]) {
    */
   def max(a: Int, i: Int): Seq[Double] = optimize(a, i)(MAX)
 
-  private def optimize(numberOfActors: Int, iterations: Int)(opt: OPT): Seq[Double] = {
+  private def optimize(numberOfActors: Int, iterations: Int)(opt: Optimum): Seq[Double] = {
     var alphaPos: Seq[Double] = Seq.fill(DIM)(0d)
     var alphaScore: Double = opt.inf
     var betaPos: Seq[Double] = Seq.fill(DIM)(0d)
@@ -133,15 +133,4 @@ case class GWO(f: (Seq[Double]) => Double, b: Seq[(Double, Double)]) {
 
     p.zip(b).map(ab => back(ab))
   }
-}
-
-
-object GWO {
-
-  private abstract class OPT(val inf: Double)
-
-  private case object MIN extends OPT(Double.PositiveInfinity)
-
-  private case object MAX extends OPT(Double.NegativeInfinity)
-
 }

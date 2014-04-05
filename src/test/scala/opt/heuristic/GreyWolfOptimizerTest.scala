@@ -7,32 +7,32 @@ import scala.math.{sqrt, sin, cos, Pi}
  * @author Jan Paw
  *         date: 3/29/2014
  */
-class GWOTest extends FunSuite with ShouldMatchers {
+class GreyWolfOptimizerTest extends FunSuite with ShouldMatchers {
 
   test("f1: min over [-100, 100]") {
     val dim = 30
     val min = f1(Seq.fill(dim)(0d))
-    val gwo = new GWO(f1, Seq.fill(dim)((-100d, 100d)))
+    val gwo = new GreyWolfOptimizer(f1, Seq.fill(dim)((-100d, 100d)))
     f1(gwo.min(dim, 500)) should equal(min)
   }
 
   test("f2: min over [-5, 5]") {
     val dim = 30
     val min = f2(Seq.fill(dim)(0d))
-    val gwo = new GWO(f2, Seq.fill(dim)((-5d, 5d)))
+    val gwo = new GreyWolfOptimizer(f2, Seq.fill(dim)((-5d, 5d)))
     f2(gwo.min(dim, 500)) should equal(min)
   }
 
   test("f3: min over [-1, 1]") {
     val dim = 30
     val min = f3(Seq.fill(dim)(0d))
-    val gwo = new GWO(f3, Seq.fill(dim)((-100d, 100d)))
+    val gwo = new GreyWolfOptimizer(f3, Seq.fill(dim)((-100d, 100d)))
     f3(gwo.min(dim, 500)) should equal(min)
   }
 
   test("f4: max over [6, 9]") {
     val min = f4(Seq((2 * Pi) + (Pi / 2), 2 * Pi))
-    val gwo = new GWO(f4, Seq((6d, 9d), (6d, 9d)))
+    val gwo = new GreyWolfOptimizer(f4, Seq((6d, 9d), (6d, 9d)))
     f4(gwo.max(500, 1000)) should equal(min +- 0.05)
   }
 
