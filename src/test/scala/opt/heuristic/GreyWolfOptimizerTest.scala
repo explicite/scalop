@@ -1,55 +1,58 @@
 package opt.heuristic
 
 import org.scalatest.{FunSuite, ShouldMatchers}
-import scala.math.{sqrt, sin, cos, Pi}
+import scala.math.{sqrt, sin, cos, exp, Pi, E}
 
 /**
  * @author Jan Paw
  *         date: 3/29/2014
  */
 class GreyWolfOptimizerTest extends FunSuite with ShouldMatchers {
+  val wolfs = 300
+  val iterations = 1000
+  val dim = 3
+  val ε = 0.001
 
-  test("f1: min over [-100, 100]") {
-    val dim = 30
-    val min = f1(Seq.fill(dim)(0d))
-    val gwo = new GreyWolfOptimizer(f1, Seq.fill(dim)((-100d, 100d)))
-    f1(gwo.min(dim, 500)) should equal(min)
+  test("Ackley's function: min over [-5, 5]") {
+    val min = ackleysFunction(Seq(0, 0))
+    val gwo = new GreyWolfOptimizer(ackleysFunction, Seq((-5d, 5d), (-5d, 5d)))
+    ackleysFunction(gwo.min(wolfs, iterations)) should equal(min +- ε)
   }
 
-  test("f2: min over [-5, 5]") {
-    val dim = 30
-    val min = f2(Seq.fill(dim)(0d))
-    val gwo = new GreyWolfOptimizer(f2, Seq.fill(dim)((-5d, 5d)))
-    f2(gwo.min(dim, 500)) should equal(min)
+  test("Rastrigin function: min [-5.12, 5.12]") {
+    val min = rastriginFunction(Seq.fill(dim)(0d))
+    val gwo = new GreyWolfOptimizer(rastriginFunction, Seq.fill(dim)((-5.12, 5.12)))
+    rastriginFunction(gwo.min(wolfs * dim, iterations * dim)) should equal(min +- ε)
   }
 
-  test("f3: min over [-1, 1]") {
-    val dim = 30
-    val min = f3(Seq.fill(dim)(0d))
-    val gwo = new GreyWolfOptimizer(f3, Seq.fill(dim)((-100d, 100d)))
-    f3(gwo.min(dim, 500)) should equal(min)
+  test("Eosom function: min [-100, 100]") {
+    val min = easomFunction(Seq(Pi, Pi))
+    val gwo = new GreyWolfOptimizer(easomFunction, Seq((-100d, 100d), (-100d, 100d)))
+    easomFunction(gwo.min(wolfs, iterations)) should equal(min +- ε)
   }
 
-  test("f4: max over [6, 9]") {
-    val min = f4(Seq((2 * Pi) + (Pi / 2), 2 * Pi))
-    val gwo = new GreyWolfOptimizer(f4, Seq((6d, 9d), (6d, 9d)))
-    f4(gwo.max(500, 1000)) should equal(min +- 0.05)
+  test("McCormick function: min [-1.5, 4] [-3, 4]") {
+    val min = mcCormicFunction(Seq(-0.54719, -1.54719))
+    val gwo = new GreyWolfOptimizer(mcCormicFunction, Seq((-1.5, 4d), (-3d, 4d)))
+    mcCormicFunction(gwo.min(wolfs, iterations)) should equal(min +- ε)
   }
 
-  def f1(x: Seq[Double]): Double = {
-    x.reduce((a, c) => a + (c * c))
+  def ackleysFunction(xs: Seq[Double]): Double = {
+    val x = xs(0)
+    val y = xs(1)
+    -20 * exp(-0.2 * sqrt(0.5 * ((x * x) + (y * y)))) - exp(0.5 * (cos(2 * Pi * x) + cos(2 * Pi * y))) + 20 + E
   }
 
-  def f2(x: Seq[Double]): Double = {
-    x.reduce((a, c) => (a * a) - (c * c))
+  def rastriginFunction(xs: Seq[Double]): Double = {
+    (10d * xs.length) + xs.foldLeft(0d)((res, x) => res + ((x * x) - (10d * cos(2d * Pi * x))))
   }
 
-  def f3(x: Seq[Double]): Double = {
-    2 * sqrt(sqrt((x(0) * x(0)) + (x(1) * x(1))))
+  def easomFunction(xs: Seq[Double]): Double = {
+    -cos(xs(0)) * cos(xs(1)) * exp(-(((xs(0) - Pi) * (xs(0) - Pi)) + ((xs(1) - Pi) * (xs(1) - Pi))))
   }
 
-  def f4(x: Seq[Double]): Double = {
-    sin(x(0)) + cos(x(1))
+  def mcCormicFunction(xs: Seq[Double]): Double = {
+    sin(xs(0) + xs(1)) + ((xs(0) - xs(1)) * (xs(0) - xs(1))) - (1.5 * xs(0)) + (2.5 * xs(1)) + 1d
   }
 
 }

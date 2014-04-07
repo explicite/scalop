@@ -51,13 +51,12 @@ case class GreyWolfOptimizer(f: (Seq[Double]) => Double, b: Seq[(Double, Double)
 
     val positions: MutableSeq[MutableSeq[Double]] = {
       val positions: MutableSeq[MutableSeq[Double]] = MutableSeq.fill(numberOfActors)(MutableSeq.fill(DIM)(0.0))
-      val random: Random = new Random()
 
       positions.foreach(position => {
         for (dim <- 0 until DIM) {
           val min = b(dim)._1
           val max = b(dim)._2
-          position(dim) = (random.nextDouble() * (max - min + 1d)) + min
+          position(dim) = next(min, max)
         }
       })
 
@@ -74,7 +73,7 @@ case class GreyWolfOptimizer(f: (Seq[Double]) => Double, b: Seq[(Double, Double)
         val fitness: Double = f(positions(position))
 
         // Update Alpha, Beta, and Delta
-        if (fitness > alphaScore) {
+        if (fitness < alphaScore) {
           alphaScore = fitness
           alphaPos = positions(position).clone()
         }
@@ -90,21 +89,21 @@ case class GreyWolfOptimizer(f: (Seq[Double]) => Double, b: Seq[(Double, Double)
         }
       }
 
-      val a = 2d - iteration * (2d / iterations)
+      val a: Double = 2d - iteration * (2d / iterations)
 
       for (i <- 0 until positions.length) {
         for (j <- 0 until positions(i).length) {
-          val cAlpha = coefficientVector(a)
-          val dAlpha = abs(cAlpha._2 * alphaPos(j) - positions(i)(j))
-          val x1 = alphaPos(j) - cAlpha._1 * dAlpha
+          val cAlpha: (Double, Double) = coefficientVector(a)
+          val dAlpha: Double = abs(cAlpha._2 * alphaPos(j) - positions(i)(j))
+          val x1: Double = alphaPos(j) - cAlpha._1 * dAlpha
 
-          val cBeta = coefficientVector(a)
-          val dBeta = abs(cBeta._2 * betaPos(j) - positions(i)(j))
-          val x2 = betaPos(j) - cBeta._1 * dBeta
+          val cBeta: (Double, Double) = coefficientVector(a)
+          val dBeta: Double = abs(cBeta._2 * betaPos(j) - positions(i)(j))
+          val x2: Double = betaPos(j) - cBeta._1 * dBeta
 
-          val cDelta = coefficientVector(a)
-          val dDelta = abs(cDelta._2 * deltaPos(j) - positions(i)(j))
-          val x3 = deltaPos(j) - cDelta._1 * dDelta
+          val cDelta: (Double, Double) = coefficientVector(a)
+          val dDelta: Double = abs(cDelta._2 * deltaPos(j) - positions(i)(j))
+          val x3: Double = deltaPos(j) - cDelta._1 * dDelta
 
           positions(i)(j) = (x1 + x2 + x3) / 3d
         }
@@ -120,17 +119,10 @@ case class GreyWolfOptimizer(f: (Seq[Double]) => Double, b: Seq[(Double, Double)
   }
 
   private def backToSpace(p: MutableSeq[Double]): MutableSeq[Double] = {
-    def back(ab: (Double, (Double, Double))): Double = {
-      val pos = ab._1
-      val lb = ab._2._1
-      val ub = ab._2._2
-      if (pos > ub) {
-        ub - Double.MinValue
-      } else if (pos < lb) {
-        lb + Double.MinValue
-      } else pos
-    }
+    p.zip(b).map(ab => if (ab._1 > ab._2._2 || ab._1 < ab._2._1) next(ab._2._1, ab._2._2) else ab._1)
+  }
 
-    p.zip(b).map(ab => back(ab))
+  private def next(min: Double, max: Double): Double = {
+    min + RAND.nextDouble() / (1d / (max - min))
   }
 }
