@@ -63,11 +63,7 @@ case class ParticleSwarmOptimizer(f: (Seq[Double]) => Double, b: Seq[(Double, Do
                       socialParameter: Double)(opt: Optimum): Seq[Double] = {
 
     val velocity: MutableSeq[MutableSeq[Double]] = MutableSeq.fill(numberOfActors)(MutableSeq.fill(DIM)(0d))
-    val pBestScore: MutableSeq[MutableSeq[Double]] = MutableSeq.fill(numberOfActors)({
-      val score = MutableSeq.fill(numberOfActors)(0d)
-      score(0) = opt.opposite().inf
-      score
-    })
+    val pBestScore: MutableSeq[MutableSeq[Double]] = MutableSeq.fill(numberOfActors)(MutableSeq.fill(DIM)(0d))
 
     val pBest: MutableSeq[MutableSeq[Double]] = MutableSeq.fill(numberOfActors)(MutableSeq.fill(DIM)(0d))
     var gBestScore: Double = opt.inf
@@ -90,7 +86,7 @@ case class ParticleSwarmOptimizer(f: (Seq[Double]) => Double, b: Seq[(Double, Do
 
     for (iteration <- 0 until iterations) {
       for (position <- 0 until pos.length) {
-        pos(position) = pos(position).zip(b).map(ab => if (ab._1 > ab._2._2 || ab._1 < ab._2._1)  (RAND.nextDouble() * (ab._2._2 - ab._2._1 + 1d)) + ab._2._1  else ab._1)
+        pos(position) = pos(position).zip(b).map(ab => if (ab._1 > ab._2._2 || ab._1 < ab._2._1) (RAND.nextDouble() * (ab._2._2 - ab._2._1 + 1d)) + ab._2._1 else ab._1)
       }
 
       for (i <- 0 until pos.length) {
