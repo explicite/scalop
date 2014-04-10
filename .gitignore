@@ -216,5 +216,6 @@ pip-log.txt
 
 #Intellij
 .idea
-project/
+project/project
+project/target
 target/
