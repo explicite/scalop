@@ -2,15 +2,15 @@ package opt.heuristic
 
 import org.scalatest.{FunSuite, ShouldMatchers}
 import scala.math.Pi
-import functions._
+import opt.Function._
 
 /**
  * @author Jan Paw
  *         Date: 3/29/2014
  */
 class GreyWolfOptimizerTest extends FunSuite with ShouldMatchers {
-  val wolfs = 300
-  val iterations = 1000
+  val wolfs = 100
+  val iterations = 500
   val dim = 3
   val ε = 0.001
 
