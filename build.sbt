@@ -2,11 +2,10 @@ name := "scalop"
 
 version := "1.0"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.4"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
-
-ScoverageSbtPlugin.instrumentSettings
-
-CoverallsPlugin.singleProject
-
+libraryDependencies ++= Seq(
+  "org.scalacheck" %% "scalacheck" % "1.11.6" % "test",
+  "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test",
+  "com.storm-enroute" %% "scalameter" % "0.6" % "test"
+)
